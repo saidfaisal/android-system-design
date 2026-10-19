@@ -1,4 +1,4 @@
-package com.example.ratelimiter.domain.ratelimiter
+package com.example.ratelimiter.domain.ratelimiter.model
 
 sealed interface RateLimitDecision {
     data object Allowed: RateLimitDecision

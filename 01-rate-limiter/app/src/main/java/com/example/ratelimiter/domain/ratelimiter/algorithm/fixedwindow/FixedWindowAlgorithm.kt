@@ -1,14 +1,20 @@
-package com.example.ratelimiter.domain.ratelimiter
+package com.example.ratelimiter.domain.ratelimiter.algorithm.fixedwindow
 
-class FixedWindowAlgorithm {
-    fun evaluate(
+import com.example.ratelimiter.domain.ratelimiter.algorithm.RateLimitAlgorithm
+import com.example.ratelimiter.domain.ratelimiter.model.RateLimitConfiguration
+import com.example.ratelimiter.domain.ratelimiter.model.RateLimitDecision
+import com.example.ratelimiter.domain.ratelimiter.model.RateLimitEvaluation
+
+class FixedWindowAlgorithm: RateLimitAlgorithm<FixedWindowState, RateLimitConfiguration> {
+    override fun initState(configuration: RateLimitConfiguration): FixedWindowState = FixedWindowState.NoWindowYet
+    override fun evaluate(
         state: FixedWindowState,
         configuration: RateLimitConfiguration,
         nowMillis: Long
-    ): FixedWindowEvaluation {
+    ): RateLimitEvaluation<FixedWindowState> {
         return when (state) {
             is FixedWindowState.NoWindowYet -> {
-                FixedWindowEvaluation(
+                RateLimitEvaluation(
                     decision = RateLimitDecision.Allowed,
                     newState = FixedWindowState.ActiveWindow(
                         count = 1,
@@ -18,7 +24,7 @@ class FixedWindowAlgorithm {
             }
             is FixedWindowState.ActiveWindow -> {
                 if (nowMillis - state.windowStartMillis >= configuration.windowMillis) {
-                    FixedWindowEvaluation(
+                    RateLimitEvaluation(
                         decision = RateLimitDecision.Allowed,
                         newState = FixedWindowState.ActiveWindow(
                             count = 1,
@@ -26,7 +32,7 @@ class FixedWindowAlgorithm {
                         )
                     )
                 } else if(state.count < configuration.limit) {
-                    FixedWindowEvaluation(
+                    RateLimitEvaluation(
                         decision = RateLimitDecision.Allowed,
                         newState = FixedWindowState.ActiveWindow(
                             count = state.count + 1,
@@ -34,7 +40,7 @@ class FixedWindowAlgorithm {
                         )
                     )
                 } else {
-                    FixedWindowEvaluation(
+                    RateLimitEvaluation(
                         decision = RateLimitDecision.Rejected(
                             retryAfterMillis = state.windowStartMillis + configuration.windowMillis - nowMillis
                         ),

@@ -7,21 +7,36 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
+import com.example.ratelimiter.domain.ratelimiter.model.RateLimitConfiguration
+import com.example.ratelimiter.platform.time.AndroidTimeProvider
+import com.example.ratelimiter.ui.screen.RateLimiterRoute
+import com.example.ratelimiter.ui.viewmodel.RateLimiterViewModel
+import com.example.ratelimiter.ui.viewmodel.RateLimiterViewModelFactory
 import com.example.ratelimiter.ui.theme.RateLimiterTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val configuration = RateLimitConfiguration(
+            limit = 3,
+            windowMillis = 10_000
+        )
+
+        val factory = RateLimiterViewModelFactory(
+            initialConfiguration = configuration,
+            timeProvider = AndroidTimeProvider()
+        )
+
+        val viewModel = ViewModelProvider(this, factory).get(RateLimiterViewModel::class.java)
+
         enableEdgeToEdge()
         setContent {
             RateLimiterTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    RateLimiterRoute(
+                        viewModel = viewModel,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -30,18 +45,3 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RateLimiterTheme {
-        Greeting("Android")
-    }
-}

@@ -1,4 +1,4 @@
-package com.example.ratelimiter.domain.ratelimiter
+package com.example.ratelimiter.domain.ratelimiter.model
 
 data class RateLimitConfiguration(
     val limit: Int,

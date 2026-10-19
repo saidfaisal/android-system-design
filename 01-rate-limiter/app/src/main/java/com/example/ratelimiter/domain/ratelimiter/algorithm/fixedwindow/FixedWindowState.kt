@@ -1,4 +1,4 @@
-package com.example.ratelimiter.domain.ratelimiter
+package com.example.ratelimiter.domain.ratelimiter.algorithm.fixedwindow
 
 sealed interface FixedWindowState {
     data object NoWindowYet: FixedWindowState

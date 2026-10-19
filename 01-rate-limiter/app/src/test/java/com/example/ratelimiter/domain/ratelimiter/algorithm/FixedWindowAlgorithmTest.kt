@@ -1,5 +1,10 @@
-package com.example.ratelimiter.domain.ratelimiter
+package com.example.ratelimiter.domain.ratelimiter.algorithm
 
+import com.example.ratelimiter.domain.ratelimiter.algorithm.fixedwindow.FixedWindowAlgorithm
+import com.example.ratelimiter.domain.ratelimiter.algorithm.fixedwindow.FixedWindowState
+import com.example.ratelimiter.domain.ratelimiter.model.RateLimitConfiguration
+import com.example.ratelimiter.domain.ratelimiter.model.RateLimitDecision
+import com.example.ratelimiter.domain.ratelimiter.model.RateLimitEvaluation
 import org.junit.Assert
 import org.junit.Test
 
@@ -15,7 +20,7 @@ class FixedWindowAlgorithmTest {
             ),
             nowMillis = 100_000
         )
-        val expected = FixedWindowEvaluation(
+        val expected = RateLimitEvaluation(
             decision = RateLimitDecision.Allowed,
             newState = FixedWindowState.ActiveWindow(
                 count = 1,
@@ -41,7 +46,7 @@ class FixedWindowAlgorithmTest {
             nowMillis = 105_000
         )
 
-        val expected = FixedWindowEvaluation(
+        val expected = RateLimitEvaluation(
             decision = RateLimitDecision.Allowed,
             newState = FixedWindowState.ActiveWindow(
                 count = 3,
@@ -67,7 +72,7 @@ class FixedWindowAlgorithmTest {
             nowMillis = 110_000
         )
 
-        val expected = FixedWindowEvaluation(
+        val expected = RateLimitEvaluation(
             decision = RateLimitDecision.Allowed,
             newState = FixedWindowState.ActiveWindow(
                 count = 1,
@@ -97,7 +102,7 @@ class FixedWindowAlgorithmTest {
             nowMillis = nowMillis
         )
 
-        val expected = FixedWindowEvaluation(
+        val expected = RateLimitEvaluation(
             decision = RateLimitDecision.Rejected(
                 retryAfterMillis = windowStartMillis + windowMillis - nowMillis
             ),
@@ -126,7 +131,7 @@ class FixedWindowAlgorithmTest {
             nowMillis = nowMillis
         )
 
-        val expected = FixedWindowEvaluation(
+        val expected = RateLimitEvaluation(
             decision = RateLimitDecision.Rejected(
                 retryAfterMillis = windowStartMillis + windowMillis - nowMillis
             ),

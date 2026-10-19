@@ -7,6 +7,7 @@ import com.example.ratelimiter.domain.ratelimiter.model.RateLimitConfiguration
 import com.example.ratelimiter.ui.state.RateLimiterIntent
 import com.example.ratelimiter.ui.state.RateLimiterUiState
 import com.example.ratelimiter.ui.state.RequestUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,8 +15,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import javax.inject.Inject
 
-class RateLimiterViewModel(
+@HiltViewModel
+class RateLimiterViewModel @Inject constructor(
     private val coordinator: RateLimiterCoordinator,
     initialConfiguration: RateLimitConfiguration
 ) : ViewModel() {

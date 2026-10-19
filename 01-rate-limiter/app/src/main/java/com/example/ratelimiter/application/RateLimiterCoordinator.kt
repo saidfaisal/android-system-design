@@ -5,10 +5,13 @@ import com.example.ratelimiter.domain.ratelimiter.algorithm.fixedwindow.FixedWin
 import com.example.ratelimiter.domain.ratelimiter.model.RateLimitConfiguration
 import com.example.ratelimiter.domain.ratelimiter.model.RateLimitDecision
 import com.example.ratelimiter.domain.time.TimeProvider
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import javax.inject.Inject
 
-class RateLimiterCoordinator(
+@ViewModelScoped
+class RateLimiterCoordinator @Inject constructor(
     initialConfiguration: RateLimitConfiguration,
     private val timeProvider: TimeProvider
 ) {

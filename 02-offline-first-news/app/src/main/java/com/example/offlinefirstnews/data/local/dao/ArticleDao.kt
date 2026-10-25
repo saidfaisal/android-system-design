@@ -1,5 +1,6 @@
 package com.example.offlinefirstnews.data.local.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -15,7 +16,7 @@ interface ArticleDao {
             ORDER BY publishedAt DESC, id ASC
         """
     )
-    fun observeArticles(): Flow<List<ArticleEntity>>
+    fun pagingSource(): PagingSource<Int, ArticleEntity>
 
     @Query("SELECT * FROM articles WHERE id = :articleId")
     fun observeArticleById(articleId: String): Flow<ArticleEntity?>

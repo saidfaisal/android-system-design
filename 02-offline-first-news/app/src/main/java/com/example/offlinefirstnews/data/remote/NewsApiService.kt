@@ -1,6 +1,6 @@
 package com.example.offlinefirstnews.data.remote
 
-import com.example.offlinefirstnews.data.remote.dto.ArticlePageDto
+import com.example.offlinefirstnews.data.remote.dto.NewsFeedPageDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -11,5 +11,5 @@ interface NewsApiService {
         orderBy: String = "recent",
         @Query("cursor")
         cursor: String? = null
-    ): ArticlePageDto
+    ): NewsFeedPageDto
 }

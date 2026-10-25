@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.offlinefirstnews.data.local.AppDatabase
 import com.example.offlinefirstnews.data.local.dao.ArticleDao
+import com.example.offlinefirstnews.data.local.dao.NewsFeedRemoteKeyDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,4 +29,9 @@ object DatabaseModule {
     fun provideArticleDao(
         database: AppDatabase
     ): ArticleDao = database.articleDao()
+
+    @Provides
+    fun provideNewsRemoteKeysDao(
+        database: AppDatabase
+    ): NewsFeedRemoteKeyDao = database.newsRemoteKeyDao()
 }

@@ -1,6 +1,6 @@
 package com.example.offlinefirstnews.domain.model
 
-data class Article(
+data class News(
     val id: String,
     val title: String,
     val sourceName: String?,

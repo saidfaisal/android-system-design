@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ArticleDto(
+data class NewsDto(
     val uuid: String,
     val title: String,
     @SerialName("published_at")

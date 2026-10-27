@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NewsFeedPageDto(
-    val data: List<ArticleDto>,
+    val data: List<NewsDto>,
     val meta: ArticlePageMetaDto
 ) {
     @Serializable

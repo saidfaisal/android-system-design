@@ -3,7 +3,7 @@ package com.example.offlinefirstnews.di
 import android.content.Context
 import androidx.room.Room
 import com.example.offlinefirstnews.data.local.AppDatabase
-import com.example.offlinefirstnews.data.local.dao.ArticleDao
+import com.example.offlinefirstnews.data.local.dao.NewsDao
 import com.example.offlinefirstnews.data.local.dao.NewsFeedRemoteKeyDao
 import dagger.Module
 import dagger.Provides
@@ -28,7 +28,7 @@ object DatabaseModule {
     @Provides
     fun provideArticleDao(
         database: AppDatabase
-    ): ArticleDao = database.articleDao()
+    ): NewsDao = database.articleDao()
 
     @Provides
     fun provideNewsRemoteKeysDao(

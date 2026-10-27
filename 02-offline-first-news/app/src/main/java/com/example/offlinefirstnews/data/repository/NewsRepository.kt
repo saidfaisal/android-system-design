@@ -5,31 +5,32 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.example.offlinefirstnews.data.local.dao.ArticleDao
+import com.example.offlinefirstnews.data.local.dao.NewsDao
 import com.example.offlinefirstnews.data.mapper.toDomain
 import com.example.offlinefirstnews.data.remote.NewsFeedRemoteMediator
-import com.example.offlinefirstnews.domain.model.Article
+import com.example.offlinefirstnews.domain.model.News
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @ViewModelScoped
-class NewsFeedRepository @Inject constructor(
-    private val articleDao: ArticleDao,
+class NewsRepository @Inject constructor(
+    private val newsDao: NewsDao,
     private val remoteMediator: NewsFeedRemoteMediator
 ) {
     @OptIn(ExperimentalPagingApi::class)
-    fun getNews(): Flow<PagingData<Article>> {
+    fun getNews(): Flow<PagingData<News>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 10,
-                prefetchDistance = 3,
+                initialLoadSize = 10,
+                prefetchDistance = 1,
                 enablePlaceholders = false
             ),
             remoteMediator = remoteMediator,
             pagingSourceFactory = {
-                articleDao.pagingSource()
+                newsDao.pagingSource()
             }
         ).flow.map { pagingData ->
             pagingData.map { entity ->
@@ -37,4 +38,10 @@ class NewsFeedRepository @Inject constructor(
             }
         }
     }
+
+    fun observeNewsById(id: String): Flow<News?> =
+        newsDao.observeNewsById(id)
+            .map { entity ->
+                entity?.toDomain()
+            }
 }

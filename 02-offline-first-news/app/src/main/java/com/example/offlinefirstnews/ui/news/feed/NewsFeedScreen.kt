@@ -1,4 +1,4 @@
-package com.example.offlinefirstnews.ui.news
+package com.example.offlinefirstnews.ui.news.feed
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,21 +18,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
-import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
+import com.example.offlinefirstnews.domain.model.News
 
 @Composable
 fun NewsFeedScreen(
-    viewModel: NewsFeedViewModel,
+    news: LazyPagingItems<News>,
     onArticleClick: (String) -> Unit,
-    modifier: Modifier
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val articles = viewModel.articles.collectAsLazyPagingItems()
-    val refreshState = articles.loadState.refresh
+    val refreshState = news.loadState.refresh
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
         when (refreshState) {
-            is LoadState.Loading if articles.itemCount == 0 -> {
+            is LoadState.Loading if news.itemCount == 0 -> {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -43,7 +46,7 @@ fun NewsFeedScreen(
                 }
             }
 
-            is LoadState.Error if articles.itemCount == 0 -> {
+            is LoadState.Error if news.itemCount == 0 -> {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -55,7 +58,7 @@ fun NewsFeedScreen(
                     Text("Couldn't load news.")
 
                     Button(
-                        onClick = { articles.retry() }
+                        onClick = onRetry
                     ) {
                         Text("Retry")
                     }
@@ -77,10 +80,10 @@ fun NewsFeedScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(
-                        count = articles.itemCount,
-                        key = articles.itemKey { it.id }
+                        count = news.itemCount,
+                        key = news.itemKey { it.id }
                     ) { index ->
-                        val article = articles[index]
+                        val article = news[index]
                         if (article != null) {
                             Column(
                                 modifier = Modifier
@@ -103,7 +106,7 @@ fun NewsFeedScreen(
                         }
                     }
 
-                    when(articles.loadState.append) {
+                    when(news.loadState.append) {
                         is LoadState.Loading -> {
                             item {
                                 Box(
@@ -120,7 +123,7 @@ fun NewsFeedScreen(
                         is LoadState.Error -> {
                             item {
                                 Button(
-                                    onClick = { articles.retry() },
+                                    onClick = onRetry,
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Text("Retry loading more")

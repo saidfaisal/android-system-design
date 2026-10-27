@@ -6,6 +6,11 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.androidx.room)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 val localProperties = Properties().apply {
@@ -74,6 +79,8 @@ dependencies {
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
     implementation(libs.okhttp)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

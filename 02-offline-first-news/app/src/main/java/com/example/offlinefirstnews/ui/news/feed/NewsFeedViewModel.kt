@@ -1,34 +1,28 @@
-package com.example.offlinefirstnews.ui.news
+package com.example.offlinefirstnews.ui.news.feed
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.offlinefirstnews.data.repository.NewsFeedRepository
-import com.example.offlinefirstnews.domain.model.Article
-import com.example.offlinefirstnews.ui.news.contract.NewsFeedEffect
-import com.example.offlinefirstnews.ui.news.contract.NewsFeedIntent
-import com.example.offlinefirstnews.ui.news.contract.NewsFeedUiState
-import dagger.hilt.android.HiltAndroidApp
+import com.example.offlinefirstnews.data.repository.NewsRepository
+import com.example.offlinefirstnews.domain.model.News
+import com.example.offlinefirstnews.ui.news.feed.contract.NewsFeedEffect
+import com.example.offlinefirstnews.ui.news.feed.contract.NewsFeedIntent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltAndroidApp
+@HiltViewModel
 class NewsFeedViewModel @Inject constructor(
-    private val newsFeedRepository: NewsFeedRepository
+    newsRepository: NewsRepository
 ): ViewModel() {
-    private val _uiState = MutableStateFlow(NewsFeedUiState())
-    val uiState = _uiState.asStateFlow()
-
     private val _effects = Channel<NewsFeedEffect>(Channel.BUFFERED)
     val effects = _effects.receiveAsFlow()
 
-    val articles: Flow<PagingData<Article>> = newsFeedRepository
+    val news: Flow<PagingData<News>> = newsRepository
         .getNews()
         .cachedIn(viewModelScope)
 

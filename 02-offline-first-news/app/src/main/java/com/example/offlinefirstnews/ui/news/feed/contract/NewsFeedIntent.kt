@@ -1,4 +1,4 @@
-package com.example.offlinefirstnews.ui.news.contract
+package com.example.offlinefirstnews.ui.news.feed.contract
 
 sealed interface NewsFeedIntent {
     data class ArticleClicked(

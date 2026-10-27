@@ -5,34 +5,34 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.offlinefirstnews.data.local.entity.ArticleEntity
+import com.example.offlinefirstnews.data.local.entity.NewsEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface ArticleDao {
+interface NewsDao {
     @Query(
         """
-            SELECT * FROM articles 
+            SELECT * FROM news 
             ORDER BY publishedAt DESC, id ASC
         """
     )
-    fun pagingSource(): PagingSource<Int, ArticleEntity>
+    fun pagingSource(): PagingSource<Int, NewsEntity>
 
-    @Query("SELECT * FROM articles WHERE id = :articleId")
-    fun observeArticleById(articleId: String): Flow<ArticleEntity?>
+    @Query("SELECT * FROM news WHERE id = :id")
+    fun observeNewsById(id: String): Flow<NewsEntity?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertArticles(articles: List<ArticleEntity>)
+    suspend fun upsertNews(news: List<NewsEntity>)
 
     @Query(
         """
-            DELETE FROM articles
+            DELETE FROM news
             WHERE id NOT IN (
-                SELECT id FROM articles
+                SELECT id FROM news
                 ORDER BY publishedAt DESC, id ASC
                 LIMIT 20
             )
         """
     )
-    suspend fun deleteOrderArticles()
+    suspend fun deleteOrderNews()
 }
